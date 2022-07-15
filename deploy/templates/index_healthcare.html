@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>ML API</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+  
+</head>
+
+<body>
+ <div class="login">
+	<h1>Predict Persistency of A Drug for Individual Patients</h1>
+
+     <!-- Main Input For Receiving Query to our ML -->
+    <form action="{{ url_for('predict')}}"method="post">
+
+      <label for="Region">Choose the patient's region:</label>
+      <select id="Region">
+        <option value="West">West</option>
+        <option value="Midwest">Midwest</option>
+        <option value="South">South</option>
+        <option value="Northeast">Northeast</option>
+        <option value="Other/Unknown">Other/Unknown</option>
+      </select><br><br>
+
+      <label for="Idn_Indicator">Choose if the patient's Flag indicating patients mapped to IDN:</label>
+      <select id="Idn_Indicator">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Ntm_Speciality">Choose the Specialty of the HCP that prescribed the NTM Rx:</label>
+      <select id="Ntm_Speciality">
+        <option value="GENERAL PRACTITIONER">GENERAL PRACTITIONER</option>
+        <option value="ENDOCRINOLOGY">ENDOCRINOLOGY</option>
+        <option value="RHEUMATOLOGY">RHEUMATOLOGY</option>
+        <option value="ONCOLOGY">ONCOLOGY</option>
+        <option value="PATHOLOGY">PATHOLOGY</option>
+        <option value="OBSTETRICS AND GYNECOLOGY">OBSTETRICS AND GYNECOLOGY</option>
+        <option value="PSYCHIATRY AND NEUROLOGY">PSYCHIATRY AND NEUROLOGY</option>
+        <option value="ORTHOPEDIC SURGERY">ORTHOPEDIC SURGERY</option>
+        <option value="PHYSICAL MEDICINE AND REHABILITATION">PHYSICAL MEDICINE AND REHABILITATION</option>
+        <option value="SURGERY AND SURGICAL SPECIALTIES">SURGERY AND SURGICAL SPECIALTIES</option>
+        <option value="PEDIATRICS">PEDIATRICS</option>
+        <option value="PULMONARY MEDICINE">PULMONARY MEDICINE</option>
+        <option value="HEMATOLOGY & ONCOLOGY">HEMATOLOGY & ONCOLOGY</option>
+        <option value="UROLOGY">UROLOGY</option>
+        <option value="PAIN MEDICINE">PAIN MEDICINE</option>
+        <option value="NEUROLOGY">NEUROLOGY</option>
+        <option value="RADIOLOGY">RADIOLOGY</option>
+        <option value="GASTROENTEROLOGY">GASTROENTEROLOGY</option>
+        <option value="EMERGENCY MEDICINE">EMERGENCY MEDICINE</option>
+        <option value="PODIATRY">PODIATRY</option>
+        <option value="OPHTHALMOLOGY">OPHTHALMOLOGY</option>
+        <option value="OCCUPATIONAL MEDICINE">OCCUPATIONAL MEDICINE</option>
+        <option value="TRANSPLANT SURGERY">TRANSPLANT SURGERY</option>
+        <option value="PLASTIC SURGERY">PLASTIC SURGERY</option>
+        <option value="CLINICAL NURSE SPECIALIST">CLINICAL NURSE SPECIALIST</option>
+        <option value="OTOLARYNGOLOGY">OTOLARYNGOLOGY</option>
+        <option value="HOSPITAL MEDICINE">HOSPITAL MEDICINE</option>
+        <option value="ORTHOPEDICS">ORTHOPEDICS</option>
+        <option value="NEPHROLOGY">NEPHROLOGY</option>
+        <option value="GERIATRIC MEDICINE">GERIATRIC MEDICINE</option>
+        <option value="HOSPICE AND PALLIATIVE MEDICINE">HOSPICE AND PALLIATIVE MEDICINE</option>
+        <option value="OBSTETRICS & OBSTETRICS & GYNECOLOGY & OBSTETRICS & GYNECOLOGY">OBSTETRICS & OBSTETRICS & GYNECOLOGY & OBSTETRICS & GYNECOLOGY</option>
+        <option value="VASCULAR SURGERY">VASCULAR SURGERY</option>
+        <option value="CARDIOLOGY">CARDIOLOGY</option>
+        <option value="NUCLEAR MEDICINE">NUCLEAR MEDICINE</option>
+        <option value="Unknown">Unknown</option>
+      </select><br><br>
+
+      <label for="Ntm_Speciality_Bucket">Choose the Specialty Bucket of the HCP that prescribed the NTM Rx:</label>
+      <select id="Ntm_Speciality_Bucket">
+        <option value="OB/GYN/Others/PCP/Unknown">OB/GYN/Others/PCP/Unknown</option>
+        <option value="Endo/Onc/Uro">Endo/Onc/Uro</option>
+        <option value="Rheum">Rheum</option>
+      </select><br><br>
+
+      <label for="Ntm_Specialist_Flag">Choose if the phasician is specialist or not:</label>
+      <select id="Ntm_Specialist_Flag">
+        <option value="Specialist">Specialist</option>
+        <option value="Others">Others</option>
+      </select><br><br>
+
+      <label for="Gluco_Record_During_Rx">Choose if the patient had a Glucocorticoid usage during the first continuous therapy:</label>
+      <select id="Gluco_Record_During_Rx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Dexa_During_Rx">Choose if the patient had a Dexa Scan during their first continuous therapy:</label>
+      <select id="Dexa_During_Rx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Dexa_Freq_During_Rx">Fill the Number of DEXA scans taken prior to the first NTM Rx date (within 365 days prior from rxdate):</label>
+      <input type="text" id="Dexa_Freq_During_Rx" name="Dexa_Freq_During_Rx" placeholder="Input a Number" required="required">
+      <br><br>
+
+      <label for="Frag_Frac_During_Rx">Choose if the patient had fragility fracture  during their first continuous therapy:</label>
+      <select id="Frag_Frac_During_Rx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Risk_Segment_During_Rx">Choose the Risk Segment of the patient at the time of the NTM Rx (within 2 years days prior from rxdate):</label>
+      <select id="Risk_Segment_During_Rx">
+        <option value="VLR_LR">VLR_LR</option>
+        <option value="HR_VHR">HR_VHR</option>
+        <option value="Unknown">Unknown</option>
+      </select><br><br>
+
+      <label for="Change_Risk_Segment">Claim the Change in Risk Segment before starting with any therapy and after receiving therapy:</label>
+      <select id="Change_Risk_Segment">
+        <option value="No change">No change</option>
+        <option value="Worsened">Worsened</option>
+        <option value="Improved">Improved</option>
+        <option value="Unknown">Unknown</option>
+      </select><br><br>
+
+      <label for="Tscore_Bucket_During_Rx">Choose the T Score of the patient at the time of the NTM Rx (within 2 years prior from rxdate):</label>
+      <select id="Tscore_Bucket_During_Rx">
+        <option value="<=-2.5"><=-2.5</option>
+        <option value=">-2.5">>-2.5</option>
+        <option value="Unknown">Unknown</option>
+      </select><br><br>
+
+      <label for="Change_T_Score">Claim the Change in Tscore before starting with any therapy and after receiving therapy:</label>
+      <select id="Change_T_Score">
+        <option value="No change">No change</option>
+        <option value="Worsened">Worsened</option>
+        <option value="Improved">Improved</option>
+        <option value="Unknown">Unknown</option>
+      </select><br><br>
+
+      <label for="Adherent_Flag">Choose the Adherence for the therapies:</label>
+      <select id="Adherent_Flag">
+        <option value="Adherent">Adherent</option>
+        <option value="Non-Adherent">Non-Adherent</option>
+      </select><br><br>
+
+      <label for="Injectable_Experience_During_Rx">Choose if the patient had any injectable drug usage in the recent 12 months before the NTM OP Rx:</label>
+      <select id="Injectable_Experience_During_Rx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Encounter_For_Screening_For_Malignant_Neoplasms">Comorbidities - Choose if the patient encountered for screening for Malignant Neoplasms:</label>
+      <select id="Comorb_Encounter_For_Screening_For_Malignant_Neoplasms">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Encounter_For_Immunization">Comorbidities - Choose if the patient encountered for Immunization:</label>
+      <select id="Comorb_Encounter_For_Immunization">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Encntr_For_General_Exam_W_O_Complaint,_Susp_Or_Reprtd_Dx">Comorbidities - Choose if the patient encountered for General Exam Without Complaint, Suspended Or Reportd Dates:</label>
+      <select id="Comorb_Encntr_For_General_Exam_W_O_Complaint,_Susp_Or_Reprtd_Dx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Vitamin_D_Deficiency">Comorbidities - Choose if the patient had Vitamin D Deficiency:</label>
+      <select id="Comorb_Vitamin_D_Deficiency">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Other_Joint_Disorder_Not_Elsewhere_Classified">Comorbidities - Choose if the patient had Other Joint Disorder Not Elsewhere Classified:</label>
+      <select id="Comorb_Other_Joint_Disorder_Not_Elsewhere_Classified">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Encntr_For_Oth_Sp_Exam_W_O_Complaint_Suspected_Or_Reprtd_Dx">Comorbidities - Choose if the patient encountered for Other Special Exam without Complaint, Suspected Or Reportd Dates:</label>
+      <select id="Comorb_Encntr_For_Oth_Sp_Exam_W_O_Complaint_Suspected_Or_Reprtd_Dx">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Long_Term_Current_Drug_Therapy">Comorbidities - Choose if the patient had Long Term Current Drug Therapy:</label>
+      <select id="Comorb_Long_Term_Current_Drug_Therapy">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Dorsalgia">Comorbidities - Choose if the patient had Dorsalgia:</label>
+      <select id="Comorb_Dorsalgia">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Personal_History_Of_Other_Diseases_And_Conditions">Comorbidities - Choose if the patient had Personal History Of Other Diseases And Conditions:</label>
+      <select id="Comorb_Personal_History_Of_Other_Diseases_And_Conditions">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Other_Disorders_Of_Bone_Density_And_Structure">Comorbidities - Choose if the patient had Other Disorders Of Bone Density And Structure:</label>
+      <select id="Comorb_Other_Disorders_Of_Bone_Density_And_Structure">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Disorders_of_lipoprotein_metabolism_and_other_lipidemias">Comorbidities - Choose if the patient had Disorders of Lipoprotein Metabolism and Other Lipidemias:</label>
+      <select id="Comorb_Disorders_of_lipoprotein_metabolism_and_other_lipidemias">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Osteoporosis_without_current_pathological_fracture">Comorbidities - Choose if the patient had Osteoporosis Without Current Pathological Fracture:</label>
+      <select id="Comorb_Osteoporosis_without_current_pathological_fracture">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Personal_history_of_malignant_neoplasm">Comorbidities - Choose if the patient had Personal History of Malignant Neoplasm:</label>
+      <select id="Comorb_Personal_history_of_malignant_neoplasm">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Comorb_Gastro_esophageal_reflux_disease">Comorbidities - Choose if the patient had Gastro Esophageal Reflux Disease:</label>
+      <select id="Comorb_Gastro_esophageal_reflux_disease">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Cholesterol_And_Triglyceride_Regulating_Preparations">Concomitancy - Choose if the patient had Cholesterol And Triglyceride Regulating Preparations:</label>
+      <select id="Concom_Cholesterol_And_Triglyceride_Regulating_Preparations">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Narcotics">Concomitancy - Choose if the patient had Narcotics:</label>
+      <select id="Concom_Narcotics">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Systemic_Corticosteroids_Plain">Concomitancy - Choose if the patient had Systemic Corticosteroids Plain:</label>
+      <select id="Concom_Systemic_Corticosteroids_Plain">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Anti_Depressants_And_Mood_Stabilisers">Concomitancy - Choose if the patient had Anti Depressants And Mood Stabilisers:</label>
+      <select id="Concom_Anti_Depressants_And_Mood_Stabilisers">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Fluoroquinolones">Concomitancy - Choose if the patient had Fluoroquinolones:</label>
+      <select id="Concom_Fluoroquinolones">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Cephalosporins">Concomitancy - Choose if the patient had Cephalosporins:</label>
+      <select id="Concom_Cephalosporins">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Macrolides_And_Similar_Types">Concomitancy - Choose if the patient had Macrolides And Similar Types:</label>
+      <select id="Concom_Macrolides_And_Similar_Types">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Broad_Spectrum_Penicillins">Concomitancy - Choose if the patient had Broad Spectrum Penicillins:</label>
+      <select id="Concom_Broad_Spectrum_Penicillins">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Anaesthetics_General">Concomitancy - Choose if the patient had Anaesthetics General:</label>
+      <select id="Concom_Anaesthetics_General">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Concom_Viral_Vaccines">Concomitancy - Choose if the patient had Viral Vaccines:</label>
+      <select id="Concom_Viral_Vaccines">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Risk_Rheumatoid_Arthritis">Choose if the patient is falling into the Risk of Rheumatoid Arthritis:</label>
+      <select id="Risk_Rheumatoid_Arthritis">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Risk_Untreated_Chronic_Hypogonadism">Choose if the patient is falling into the Risk of Untreated Chronic Hypogonadism:</label>
+      <select id="Risk_Untreated_Chronic_Hypogonadism">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Risk_Smoking_Tobacco">Choose if the patient is Smoking Tobacco:</label>
+      <select id="Risk_Smoking_Tobacco">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Risk_Vitamin_D_Insufficiency">Choose if the patient is falling into the Risk of Vitamin D Insufficiency:</label>
+      <select id="Risk_Vitamin_D_Insufficiency">
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+      </select><br><br>
+
+      <label for="Count_Of_Risks">Fill the Count of Total Risk Factors that the patient is falling into:</label>
+      <input type="text" id="Count_Of_Risks" name="Count_Of_Risks" placeholder="Input a Number" required="required"><br><br>
+      <br><br>
+
+      <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+    </form>
+
+   <br>
+   <br>
+   {{ prediction_text }}
+
+ </div>
+ <img src="/static/images/Original.svg" style="width: 300px;position: relative;" alt="Company Logo"/>
+
+</body>
+</html>
